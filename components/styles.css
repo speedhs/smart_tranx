@@ -1,0 +1,20 @@
+.swiper-pagination-bullet-active{
+    background-color: darkorange;
+}
+
+.swiper-pagination-bullet{
+    background-color: coral;
+    
+}
+
+.swiper-wrapper{
+    height: auto;
+    width: fit-content;
+}
+
+
+
+
+
+
+
