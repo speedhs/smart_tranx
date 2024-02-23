@@ -109,7 +109,7 @@ const Page = () => {
           {courses.map((course) => (
             <div key={course.name} id={course.url} className="mb-8">
               <h1 className="text-2xl font-bold mb-4">{course.name}</h1>
-              <div className="flex flex-wrap gap-4">
+              <div className="flex flex-wrap gap-10">
                 {course.subCourses.map((item) => (
                   <div key={item.name} className="w-60">
                     {/* Fixed size for each card */}

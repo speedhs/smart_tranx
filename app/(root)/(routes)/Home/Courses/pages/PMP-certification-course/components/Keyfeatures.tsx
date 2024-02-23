@@ -35,7 +35,8 @@ const Keyfeatures = () => {
   ];
 
   return (
-    <div className="flex flex-col mt-4 p-6  max-w-[1000px]">
+    <div  id='Keyfeatures'>
+    <div className="flex flex-col mt-4 p-12  max-w-[1000px] " >
       <h1 className="text-2xl font-bold">Key Features</h1>
       <div className="grid grid-cols-2 mt-6 gap-5 p-5">
         {trainingOptions.map((item) => (
@@ -51,6 +52,7 @@ const Keyfeatures = () => {
           </div>
         ))}
       </div>
+    </div>
     </div>
   );
 };

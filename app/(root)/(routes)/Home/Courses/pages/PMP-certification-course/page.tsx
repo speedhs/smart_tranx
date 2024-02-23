@@ -10,35 +10,44 @@ import Courseagenda from "./components/Courseagenda";
 import Faq from "./components/Faq";
 import Benifits_cards from "@/components/Benifits_cards";
 import SheduleForm from "@/components/SheduleForm";
-import { cn } from "@/lib/utils";
 import Contactus_card from "@/components/Contactus_card";
 
-const Page = () => {
+const Page: React.FC = () => {
   const path = usePathname();
   const pathSegments = path.split("/").filter((segment) => segment);
-
   const [selectedSection, setSelectedSection] = useState("Overview");
-  const [isSticky, setIsSticky] = useState(false);
-  const sectionRef = useRef(null);
-  const formRef = useRef(null);
+  const sectionRef = useRef<HTMLDivElement>(null);
 
-  const handleSectionChange = (section: any) => {
+  const handleSectionChange = (section: string) => {
     setSelectedSection(section);
+    const sectionElement = document.getElementById(section);
+    if (sectionElement) {
+      sectionElement.scrollIntoView({ behavior: "smooth" });
+    }
   };
 
   useEffect(() => {
     const handleScroll = () => {
-      const sectionOffset = sectionRef.current.offsetTop;
       const scrollPosition = window.scrollY;
+      const sections = ["Overview", "Keyfeatures", "Courseagenda", "Faq"];
+      let currentSection = "Overview";
+      const sectionOffsets: Record<string, number> = {};
 
-      setIsSticky(scrollPosition >= sectionOffset);
+      sections.forEach((section) => {
+        const sectionElement = document.getElementById(section);
+        if (sectionElement) {
+          sectionOffsets[section] = sectionElement.offsetTop;
+          if (scrollPosition >= sectionOffsets[section]) {
+            currentSection = section;
+          }
+        }
+      });
+
+      setSelectedSection(currentSection);
     };
 
     window.addEventListener("scroll", handleScroll);
-
-    return () => {
-      window.removeEventListener("scroll", handleScroll);
-    };
+    return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
   return (
@@ -97,28 +106,18 @@ const Page = () => {
           <Benifits_cards />
         </div>
         <div className="sticky flex flex-col top-0 z-10 mt-14 bg-white">
-          <NavBar
-            selectedSection={selectedSection}
-            onSectionChange={handleSectionChange}
-          />
+          <NavBar selectedSection={selectedSection} onSectionChange={handleSectionChange} />
           <Separator className="mt-2 max-w-[1000px]" />
         </div>
-        <div ref={sectionRef} className="flex ">
-          <Section selectedSection={selectedSection} />
-          {/* <div className="sticky top-0 right-0 mt-14">
-            <SheduleForm
-              title="Project Management Techniques certification training"
-              duration="4 days"
-            />
-          </div> */}
-          <div
-            ref={formRef}
-            className={`fixed top-0 right-0 mt-14 ml-14 ${
-              isSticky ? "relative" : "relative"
-            }`}
-          >
-            <SheduleForm title="PMP-certification-course" duration="4 days" />
-          </div>
+        <div ref={sectionRef} className="flex flex-col">
+          <Overview/>
+          <Keyfeatures />
+          <Courseagenda />
+          <Faq />
+        </div>
+        <div className="sticky flex flex-col top-0 z-10 mt-14 bg-white">
+          <SheduleForm title="PMP-certification-course" duration="4 days" />
+          <Separator className="mt-2 max-w-[1000px]" />
         </div>
         <Contactus_card />
       </div>
@@ -126,15 +125,15 @@ const Page = () => {
   );
 };
 
-const NavBar = ({ selectedSection, onSectionChange }: any) => {
-  const sections = ["Overview", "Keyfeatures", "Courseagenda", "Faqs"];
+const NavBar: React.FC<{ selectedSection: string; onSectionChange: (section: string) => void }> = ({ selectedSection, onSectionChange }) => {
+  const sections = ["Overview", "Keyfeatures", "Courseagenda", "Faq"];
 
   return (
-    <div className="flex justify-between max-w-[1000px] px-4 py-2 bg-white">
+    <div className="flex justify-between max-w-[1000px] px-4 py-1 bg-white">
       {sections.map((section, index) => (
         <div
           key={index}
-          className={`px-4 py-2 cursor-pointer ${
+          className={`px-4 py-100 cursor-pointer ${
             selectedSection === section ? "text-orange-600" : "text-black"
           }`}
           onClick={() => onSectionChange(section)}
@@ -142,25 +141,6 @@ const NavBar = ({ selectedSection, onSectionChange }: any) => {
           <h1 className="font-medium">{section}</h1>
         </div>
       ))}
-    </div>
-  );
-};
-
-const Section = ({ selectedSection }: any) => {
-  const contentMap = {
-    Overview: <Overview />,
-    Keyfeatures: <Keyfeatures />,
-    Courseagenda: <Courseagenda />,
-    Faqs: <Faq />,
-  };
-
-  return (
-    <div>
-      {contentMap[selectedSection]}
-      {/* <Overview />
-    <Keyfeatures />
-    <Courseagenda />
-    <Faq /> */}
     </div>
   );
 };
