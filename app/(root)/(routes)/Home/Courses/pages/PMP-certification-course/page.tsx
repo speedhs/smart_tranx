@@ -12,8 +12,11 @@ import Benifits_cards from "@/components/Benifits_cards";
 import SheduleForm from "@/components/SheduleForm";
 import { cn } from "@/lib/utils";
 import Contactus_card from "@/components/Contactus_card";
+import Razorpay from 'razorpay';
+import RazorpayIntegration from "../../api/RazorPay";
 
 const Page = () => {
+  console.log("haha on page")
   const path = usePathname();
   const pathSegments = path.split("/").filter((segment) => segment);
 
@@ -85,7 +88,7 @@ const Page = () => {
                 </div>
               </div>
             </div>
-            <button className="w-auto max-w-44 h-auto bg-sky-400 mt-10 min-h-14 rounded-lg p-1">
+            <button className="w-auto max-w-44 h-auto bg-sky-400 mt-10 min-h-14 rounded-lg p-1" onClick={RazorpayIntegration}>
               <h1 className="text-xl font-normal">Schedule</h1>
             </button>
           </div>
