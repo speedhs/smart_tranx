@@ -86,9 +86,9 @@ const Page = () => {
   ];
 
   return (
-    <div className="h-screen w-full flex p-5 gap-3">
-      {/* Secondary navigation bar */}
-      <div className="w-72 min-w-72 rounded-lg bg-gray-200 overflow-y-auto">
+    <div className="w-70 flex p-5 gap-3 overflow-hidden">
+      {/* Sticky left navigation */}
+      <div className="w-70 min-w-72 rounded-lg bg-gray-200 fixed left-2 top-13 bottom-13">
         <div className="p-4">
           <h2 className="text-lg font-bold mb-4">Courses</h2>
           <ul className="space-y-2">
@@ -104,11 +104,11 @@ const Page = () => {
       </div>
 
       {/* Main content */}
-      <div className="overflow-y-auto flex-grow">
-        <div className=" bg-slate-400 h-full">
+      <div className="flex-grow pl-72">
+        <div className="h-full">
           {courses.map((course) => (
             <div key={course.name} id={course.url} className="mb-8">
-              <h1 className="text-2xl font-bold text-white mb-4">{course.name}</h1>
+              <h1 className="text-2xl font-bold mb-4">{course.name}</h1>
               <div className="flex flex-wrap gap-4">
                 {course.subCourses.map((item) => (
                   <div key={item.name} className="w-60">
