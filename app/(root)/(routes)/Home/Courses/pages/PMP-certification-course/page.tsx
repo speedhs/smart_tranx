@@ -1,5 +1,4 @@
 "use client";
-
 import React, { useState, useEffect, useRef } from "react";
 import { usePathname } from "next/navigation";
 import { FaCalendarAlt, FaRegIdBadge } from "react-icons/fa";
@@ -61,9 +60,9 @@ const Page: React.FC = () => {
             </span>
           ))}
         </div>
-        <div className="flex flex-row items-center justify-between mt-5 p-8">
-          <div className="flex flex-col">
-            <div className="h-auto max-w-[700px]  ">
+        <div className="flex flex-col lg:flex-row">
+          <div className="lg:w-3/4">
+            <div className="flex flex-col">
               <h1 className="text-4xl font-extrabold">
                 PMP certification course
               </h1>
@@ -77,8 +76,8 @@ const Page: React.FC = () => {
                 management journey.
               </p>
             </div>
-            <div className="flex flex-row mt-8 gap-x-7 p-2  ">
-              <div className="flex gap-2 items-center ">
+            <div className="flex flex-row mt-8 gap-x-7 p-2">
+              <div className="flex gap-2 items-center">
                 <FaCalendarAlt className="w-10 h-10 opacity-80" />
                 <div className="flex flex-col">
                   <h1 className="font-bold">Duration</h1>
@@ -89,43 +88,59 @@ const Page: React.FC = () => {
               <div className="flex gap-2 items-center">
                 <FaRegIdBadge className="w-10 h-10 opacity-80" />
                 <div className="flex flex-col">
-                  <h1 className="font-bold ">Speciality</h1>
+                  <h1 className="font-bold">Speciality</h1>
                   <h2>One to One training</h2>
                 </div>
               </div>
             </div>
-            <button className="w-auto max-w-44 h-auto bg-sky-400 mt-10 min-h-14 rounded-lg p-1">
-              <h1 className="text-xl font-normal">Schedule</h1>
-            </button>
           </div>
+          
         </div>
         <div className="flex flex-col items-center mt-10 justify-center">
           <h1 className="text-4xl font-bold">
-            Benifits of <span className="text-orange-500">Smart Tranx</span>
+            Benefits of <span className="text-orange-500">Smart Tranx</span>
           </h1>
           <Benifits_cards />
         </div>
         <div className="sticky flex flex-col top-0 z-10 mt-14 bg-white">
-          <NavBar selectedSection={selectedSection} onSectionChange={handleSectionChange} />
+          <NavBar
+            selectedSection={selectedSection}
+            onSectionChange={handleSectionChange}
+          />
           <Separator className="mt-2 max-w-[1000px]" />
         </div>
-        <div ref={sectionRef} className="flex flex-col">
-          <Overview/>
-          <Keyfeatures />
-          <Courseagenda />
-          <Faq />
-        </div>
-        <div className="sticky flex flex-col top-0 z-10 mt-14 bg-white">
-          <SheduleForm title="PMP-certification-course" duration="4 days" />
-          <Separator className="mt-2 max-w-[1000px]" />
-        </div>
+        <div ref={sectionRef} className="grid grid-cols-2 gap-4">
+  <div className="lg:w-3/4 overflow-y-auto" style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}>
+    <div style={{ height: "calc(100vh - 40px)", paddingRight: "0px" }}>
+      <Overview />
+      <Keyfeatures />
+      <Courseagenda />
+      <Faq />
+    </div>
+  </div>
+  <div className="lg:w-1/4 sticky top-0" style={{  fontSize: "1.2rem",paddingLeft: "20vh",paddingTop:"25vh"}}>
+    <SheduleForm
+      title="PMP-certification-course"
+      duration="4 days"
+    />
+  </div>
+</div>
+
+
+
+
+
+
         <Contactus_card />
       </div>
     </div>
   );
 };
 
-const NavBar: React.FC<{ selectedSection: string; onSectionChange: (section: string) => void }> = ({ selectedSection, onSectionChange }) => {
+const NavBar: React.FC<{
+  selectedSection: string;
+  onSectionChange: (section: string) => void;
+}> = ({ selectedSection, onSectionChange }) => {
   const sections = ["Overview", "Keyfeatures", "Courseagenda", "Faq"];
 
   return (
