@@ -1,5 +1,4 @@
 "use client";
-
 import React, { useState, useEffect, useRef } from "react";
 import { usePathname } from "next/navigation";
 import { FaCalendarAlt, FaRegIdBadge } from "react-icons/fa";
@@ -16,17 +15,19 @@ import main from "../../api/RazorPay";
 import axios from 'axios';
 import Razorpay from "razorpay";
 
-
 const Page = () => {
-
-  console.log("haha on page")
   const [order, setOrder] = useState<any>(null);
-  
   const [order_id, setOrderId] = useState<any>("");
   const [amount, setAmount] = useState<any>(0);
+  const [prefillValues, setPrefillValues] = useState<any>({
+    name: "",
+    email: "",
+    contact: ""
+  });
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+
   const createOrder = async () => {
       try {
-        console.log("try client mai gaya")
           var amount = 1000
           var currency = "INR"
           var receipt = "receipt#1"
@@ -35,7 +36,6 @@ const Page = () => {
               currency,
               receipt
           });
-          console.log(response.data)
           setAmount(response.data.amount)
           setOrderId(response.data.id)
           setOrder(response.data);
@@ -43,37 +43,59 @@ const Page = () => {
           console.error('Error creating order:', error);
       }
   };
+
   const payment = async () => {
-    var script = document.createElement('script');
+    try {
+      var script = document.createElement('script');
     script.src = 'https://checkout.razorpay.com/v1/checkout.js';
     document.head.appendChild(script);  
     console.log("script")
-    var options = {
-      "key": "rzp_live_TRaKMRdCPf9r3P", // Enter the Key ID generated from the Dashboard
-      "amount": amount, // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
-      "currency": "INR",
-      "name": "Smartranx", // Your business name
-      "description": "Test Transaction",
-      "image": "https://logos.flamingtext.com/Word-Logos/any-design-sketch-name.png",
-      "order_id": order_id, // This is a sample Order ID. Pass the `id` obtained in the response of Step 1
-      "callback_url": "http://localhost:8000/api/handle-payment",
-      "prefill": { // We recommend using the prefill parameter to auto-fill customer's contact information especially their phone number
-          "name": "Harsh", // Your customer's name
-          "email": "harsh@gmail.com",
-          "contact": "9000090000" // Provide the customer's phone number for better conversion rates 
-      },
-      "notes": {
-          "address": "Razorpay Corporate Office"
-      },
-      "theme": {
-          "color": "#3399cc"
-      }
+      var options = {
+        "key": "rzp_live_TRaKMRdCPf9r3P", // Enter the Key ID generated from the Dashboard
+        "amount": amount, // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
+        "currency": "INR",
+        "name": "Smartranx", // Your business name
+        "description": "Test Transaction",
+        "image": "https://logos.flamingtext.com/Word-Logos/any-design-sketch-name.png",
+        "order_id": order_id, // This is a sample Order ID. Pass the `id` obtained in the response of Step 1
+        "callback_url": "http://localhost:8000/api/",
+        "prefill": { // We recommend using the prefill parameter to auto-fill customer's contact information especially their phone number
+            "name": prefillValues.name, // Your customer's name
+            "email": prefillValues.email,
+            "contact": prefillValues.contact // Provide the customer's phone number for better conversion rates 
+        },
+        "notes": {
+            "address": "Razorpay Corporate Office"
+        },
+        "theme": {
+            "color": "#3399cc"
+        }
+      };
+      
+      const rzp1 = new (window as any).Razorpay(options);
+      rzp1.open();
+    } catch (error) {
+      console.error('Error during payment:', error);
+    }
   };
-  
-  // Create a new instance of Razorpay with the defined options
-  const rzp1 = new (window as any).Razorpay(options);
-  rzp1.open();
+
+  const openDialog = () => {
+    setIsDialogOpen(true);
+    createOrder()
   };
+
+  const closeDialog = () => {
+    setIsDialogOpen(false);
+  };
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setPrefillValues(prevState => ({
+      ...prevState,
+      [name]: value
+    }));
+  };
+
   const path = usePathname();
   const pathSegments = path.split("/").filter((segment) => segment);
 
@@ -145,13 +167,10 @@ const Page = () => {
                 </div>
               </div>  
             </div>
-            <button className="w-auto max-w-44 h-auto bg-sky-400 mt-10 min-h-14 rounded-lg p-1" onClick={createOrder}>
-              
+            <button className="w-auto max-w-44 h-auto bg-sky-400 mt-10 min-h-14 rounded-lg p-1" onClick={openDialog}>
               <h1 className="text-xl font-normal">Schedule</h1>
             </button>
-            
             <button className="w-auto max-w-44 h-auto bg-sky-400 mt-10 min-h-14 rounded-lg p-1" onClick={payment}>
-              
               <h1 className="text-xl font-normal">Pay</h1>
             </button>
           </div>
@@ -171,12 +190,6 @@ const Page = () => {
         </div>
         <div ref={sectionRef} className="flex ">
           <Section selectedSection={selectedSection} />
-          {/* <div className="sticky top-0 right-0 mt-14">
-            <SheduleForm
-              title="Project Management Techniques certification training"
-              duration="4 days"
-            />
-          </div> */}
           <div
             ref={formRef}
             className={`fixed top-0 right-0 mt-14 ml-14 ${
@@ -188,6 +201,31 @@ const Page = () => {
         </div>
         <Contactus_card />
       </div>
+      {/* Dialog */}
+      {isDialogOpen && (
+        <div className="fixed top-0 left-0 w-full h-full bg-gray-800 bg-opacity-50 flex justify-center items-center z-50">
+          <div className="bg-white p-8 rounded-lg">
+            <h2 className="text-2xl font-bold mb-4">Enter Details</h2>
+            <form>
+              <div className="mb-4">
+                <label htmlFor="name" className="block mb-2">Name</label>
+                <input type="text" id="name" name="name" value={prefillValues.name} onChange={handleInputChange} className="w-full border border-gray-300 rounded-md px-3 py-2" />
+              </div>
+              <div className="mb-4">
+                <label htmlFor="email" className="block mb-2">Email</label>
+                <input type="email" id="email" name="email" value={prefillValues.email} onChange={handleInputChange} className="w-full border border-gray-300 rounded-md px-3 py-2" />
+              </div>
+              <div className="mb-4">
+                <label htmlFor="contact" className="block mb-2">Contact</label>
+                <input type="text" id="contact" name="contact" value={prefillValues.contact} onChange={handleInputChange} className="w-full border border-gray-300 rounded-md px-3 py-2" />
+              </div>
+              <div className="text-right">
+                <button type="button" onClick={closeDialog} className="px-4 py-2 bg-sky-400 text-white rounded-md">Done</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
@@ -223,10 +261,6 @@ const Section = ({ selectedSection }: any) => {
   return (
     <div>
       {contentMap[selectedSection]}
-      {/* <Overview />
-    <Keyfeatures />
-    <Courseagenda />
-    <Faq /> */}
     </div>
   );
 };
