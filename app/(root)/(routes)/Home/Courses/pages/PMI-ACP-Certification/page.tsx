@@ -12,8 +12,68 @@ import Benifits_cards from "@/components/Benifits_cards";
 import SheduleForm from "@/components/SheduleForm";
 import { cn } from "@/lib/utils";
 import Contactus_card from "@/components/Contactus_card";
+import main from "../../api/RazorPay";
+import axios from 'axios';
+import Razorpay from "razorpay";
+
 
 const Page = () => {
+
+  console.log("haha on page")
+  const [order, setOrder] = useState<any>(null);
+  
+  const [order_id, setOrderId] = useState<any>("");
+  const [amount, setAmount] = useState<any>(0);
+  const createOrder = async () => {
+      try {
+        console.log("try client mai gaya")
+          var amount = 1000
+          var currency = "INR"
+          var receipt = "receipt#1"
+          const response = await axios.post('http://localhost:8000/api/create-order', {
+              amount,
+              currency,
+              receipt
+          });
+          console.log(response.data)
+          setAmount(response.data.amount)
+          setOrderId(response.data.id)
+          setOrder(response.data);
+      } catch (error) {
+          console.error('Error creating order:', error);
+      }
+  };
+  const payment = async () => {
+    var script = document.createElement('script');
+    script.src = 'https://checkout.razorpay.com/v1/checkout.js';
+    document.head.appendChild(script);  
+    console.log("script")
+    var options = {
+      "key": "rzp_live_TRaKMRdCPf9r3P", // Enter the Key ID generated from the Dashboard
+      "amount": amount, // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
+      "currency": "INR",
+      "name": "Smartranx", // Your business name
+      "description": "Test Transaction",
+      "image": "https://logos.flamingtext.com/Word-Logos/any-design-sketch-name.png",
+      "order_id": order_id, // This is a sample Order ID. Pass the `id` obtained in the response of Step 1
+      "callback_url": "http://localhost:8000/api/handle-payment",
+      "prefill": { // We recommend using the prefill parameter to auto-fill customer's contact information especially their phone number
+          "name": "Harsh", // Your customer's name
+          "email": "harsh@gmail.com",
+          "contact": "9000090000" // Provide the customer's phone number for better conversion rates 
+      },
+      "notes": {
+          "address": "Razorpay Corporate Office"
+      },
+      "theme": {
+          "color": "#3399cc"
+      }
+  };
+  
+  // Create a new instance of Razorpay with the defined options
+  const rzp1 = new (window as any).Razorpay(options);
+  rzp1.open();
+  };
   const path = usePathname();
   const pathSegments = path.split("/").filter((segment) => segment);
 
@@ -55,17 +115,17 @@ const Page = () => {
         <div className="flex flex-row items-center justify-between mt-5 p-8">
           <div className="flex flex-col">
             <div className="h-auto max-w-[700px]  ">
-              <h1 className="text-4xl font-extrabold">PMI-ACP Certification</h1>
+              <h1 className="text-4xl font-extrabold">
+                PMP certification course
+              </h1>
               <p className="font-medium text-lg opacity-90">
-                The PMI-ACP® (Agile Certified Practitioner) training is designed
-                to equip individuals with the skills and knowledge to become
-                proficient agile professionals with expertise in a wide spectrum
-                of agile methodologies. The ACP certification is one of the
-                fastest-growing certifications offered by the Project Management
-                Institute (PMI). Recently, the PMI-ACP exam has been updated to
-                include the Agile Practice Guide, further enhancing the
-                certification's relevance and comprehensiveness in the field of
-                agile project management.
+                Smartranx’s PMP training boot camp covers all the essential
+                topics which are absolutely crucial for a project management
+                professional. Our course curriculum is aligned with the latest
+                PMBOK 7th edition guide book. Additionally, you will gain
+                insight into real-life case studies, the exam pattern, and
+                receive valuable tips and tricks to excel in your project
+                management journey.
               </p>
             </div>
             <div className="flex flex-row mt-8 gap-x-7 p-2  ">
@@ -83,10 +143,16 @@ const Page = () => {
                   <h1 className="font-bold ">Speciality</h1>
                   <h2>One to One training</h2>
                 </div>
-              </div>
+              </div>  
             </div>
-            <button className="w-auto max-w-44 h-auto bg-sky-400 mt-10 min-h-14 rounded-lg p-1">
+            <button className="w-auto max-w-44 h-auto bg-sky-400 mt-10 min-h-14 rounded-lg p-1" onClick={createOrder}>
+              
               <h1 className="text-xl font-normal">Schedule</h1>
+            </button>
+            
+            <button className="w-auto max-w-44 h-auto bg-sky-400 mt-10 min-h-14 rounded-lg p-1" onClick={payment}>
+              
+              <h1 className="text-xl font-normal">Pay</h1>
             </button>
           </div>
         </div>
@@ -105,13 +171,19 @@ const Page = () => {
         </div>
         <div ref={sectionRef} className="flex ">
           <Section selectedSection={selectedSection} />
+          {/* <div className="sticky top-0 right-0 mt-14">
+            <SheduleForm
+              title="Project Management Techniques certification training"
+              duration="4 days"
+            />
+          </div> */}
           <div
             ref={formRef}
             className={`fixed top-0 right-0 mt-14 ml-14 ${
               isSticky ? "relative" : "relative"
             }`}
           >
-            <SheduleForm title="PMI-ACP-Certification" duration="4 days" />
+            <SheduleForm title="PMP-certification-course" duration="4 days" />
           </div>
         </div>
         <Contactus_card />
@@ -148,7 +220,15 @@ const Section = ({ selectedSection }: any) => {
     Faqs: <Faq />,
   };
 
-  return <div>{contentMap[selectedSection]}</div>;
+  return (
+    <div>
+      {contentMap[selectedSection]}
+      {/* <Overview />
+    <Keyfeatures />
+    <Courseagenda />
+    <Faq /> */}
+    </div>
+  );
 };
 
 export default Page;
