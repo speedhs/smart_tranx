@@ -19,12 +19,30 @@ const Page = () => {
   const [order, setOrder] = useState<any>(null);
   const [order_id, setOrderId] = useState<any>("");
   const [amount, setAmount] = useState<any>(0);
+  const [coursename, setCourseName] = useState<any>("");
+  const [email, setEmail] = useState<any>("");
   const [prefillValues, setPrefillValues] = useState<any>({
     name: "",
     email: "",
     contact: ""
   });
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+
+
+  const sendEmail = async() => {
+    try {
+      setCourseName("PMP-ACP-Certification")
+      const email = "cocattackbased@gmail.com"
+      const response = await axios.post('http://localhost:8000/api/send-email', {
+        coursename,
+        email
+      })
+      console.log(response)
+
+    } catch (error) {
+      console.log("client mai error:", error)
+    }
+  }
 
   const createOrder = async () => {
       try {
@@ -58,7 +76,7 @@ const Page = () => {
         "description": "Test Transaction",
         "image": "https://logos.flamingtext.com/Word-Logos/any-design-sketch-name.png",
         "order_id": order_id, // This is a sample Order ID. Pass the `id` obtained in the response of Step 1
-        "callback_url": "http://localhost:8000/api/",
+        "callback_url": `http://localhost:8000/api/handle-payment?${email}&${coursename}`,
         "prefill": { // We recommend using the prefill parameter to auto-fill customer's contact information especially their phone number
             "name": prefillValues.name, // Your customer's name
             "email": prefillValues.email,
@@ -167,7 +185,7 @@ const Page = () => {
                 </div>
               </div>  
             </div>
-            <button className="w-auto max-w-44 h-auto bg-sky-400 mt-10 min-h-14 rounded-lg p-1" onClick={openDialog}>
+            <button className="w-auto max-w-44 h-auto bg-sky-400 mt-10 min-h-14 rounded-lg p-1" onClick={sendEmail}>
               <h1 className="text-xl font-normal">Schedule</h1>
             </button>
             <button className="w-auto max-w-44 h-auto bg-sky-400 mt-10 min-h-14 rounded-lg p-1" onClick={payment}>
