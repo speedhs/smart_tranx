@@ -60,7 +60,6 @@ const Navbar = () => {
           <PopoverTrigger
             className="w-40 h-8 bg-sky-500 rounded-md flex items-center justify-center cursor-pointer hover:translate-y-[-4px] transition-transform"
             onMouseEnter={handleCoursesHover}
-            onMouseLeave={handleCoursesLeave}
           >
             All courses
           </PopoverTrigger>
@@ -75,7 +74,6 @@ const Navbar = () => {
           <PopoverTrigger
             className="hover-trigger hover:translate-y-[-4px] transition-transform"
             onMouseEnter={handleResourcesHover}
-            onMouseLeave={handleResourcesLeave}
           >
             Resourses
           </PopoverTrigger>
