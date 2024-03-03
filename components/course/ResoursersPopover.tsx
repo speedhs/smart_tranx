@@ -14,16 +14,16 @@ const ResoursersPopover = () => {
       url: "/Home/Tutorials",
       icon: "📘" // Icon for Tutorials
     },
-    {
-      title: "Practice Test",
-      url: "/Home/Practice_test",
-      icon: "📝" // Icon for Practice Test
-    },
-    {
-      title: "Interview Questions",
-      url: "/Home/Interview_Questions",
-      icon: "❓" // Icon for Interview Questions
-    },
+    // {
+    //   title: "Practice Test",
+    //   url: "/Home/Practice_test",
+    //   icon: "📝" // Icon for Practice Test
+    // },
+    // {
+    //   title: "Interview Questions",
+    //   url: "/Home/Interview_Questions",
+    //   icon: "❓" // Icon for Interview Questions
+    // },
   ];
 
   return (
