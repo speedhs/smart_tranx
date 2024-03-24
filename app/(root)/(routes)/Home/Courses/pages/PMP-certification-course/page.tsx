@@ -10,11 +10,6 @@ import Faq from "./components/Faq";
 import Benifits_cards from "@/components/Benifits_cards";
 import SheduleForm from "@/components/SheduleForm";
 import Contactus_card from "@/components/Contactus_card";
-import cors from 'cors'
-import express from "express"
-const app = express();
-app.use(cors());
-
 const Page: React.FC = () => {
   const path = usePathname();
   const pathSegments = path.split("/").filter((segment) => segment);

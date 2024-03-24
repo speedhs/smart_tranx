@@ -1,9 +1,22 @@
-import Blogcard from "@/components/blog/Blogcard";
+"use client"
+import React, { useState } from "react";
 import Link from "next/link";
-import React from "react";
+import Blogcard from "@/components/blog/Blogcard";
 
-const Page = () => {
-  const courses = [
+interface SubCourse {
+  name: string;
+  url: string;
+}
+
+interface Course {
+  name: string;
+  url: string;
+  icon: string;
+  subCourses: SubCourse[];
+}
+
+const Page: React.FC = () => {
+  const initialCourses: Course[] = [
     {
       name: "Project Management",
       url: "project-management",
@@ -85,42 +98,72 @@ const Page = () => {
     },
   ];
 
+  // Tracks which courses are checked
+  const [checkedCourses, setCheckedCourses] = useState<string[]>(initialCourses.map(course => course.url));
+
+  const handleCheckboxChange = (courseUrl: string) => {
+    setCheckedCourses(prev => 
+      prev.includes(courseUrl) ? prev.filter(url => url !== courseUrl) : [...prev, courseUrl]
+    );
+  };
+
+  // Determines if a course is checked
+  const isCourseChecked = (courseUrl: string) => {
+    return checkedCourses.includes(courseUrl);
+  };
+
   return (
-    <div className="w-70 flex p-5 gap-3 overflow-hidden">
+    <div className="flex p-5 gap-3 overflow-hidden">
       {/* Sticky left navigation */}
-      <div className="w-70 min-w-72 rounded-lg bg-gray-200 fixed left-2 top-13 bottom-13">
+      <div className="min-w-72 rounded-lg bg-gray-200 fixed left-2 top-13 bottom-13 overflow-auto">
         <div className="p-4">
           <h2 className="text-lg font-bold mb-4">Courses</h2>
           <ul className="space-y-2">
-            {courses.map((course) => (
-              <li key={course.name}>
-                <a href={`#${course.url}`} className="block hover:text-blue-600">
-                  {course.name}
-                </a>
+            {initialCourses.map((course) => (
+              <li key={course.url}>
+                <a href={`#${course.url}`} className="block hover:text-blue-600">{course.name}</a>
               </li>
             ))}
           </ul>
         </div>
       </div>
 
-      {/* Main content */}
-      <div className="flex-grow pl-72">
-        <div className="h-full">
-          {courses.map((course) => (
-            <div key={course.name} id={course.url} className="mb-8">
-              <h1 className="text-2xl font-bold mb-4">{course.name}</h1>
-              <div className="flex flex-wrap gap-10">
-                {course.subCourses.map((item) => (
-                  <div key={item.name} className="w-60">
-                    {/* Fixed size for each card */}
-                    <Link href={`/Home/Courses/pages/${item.url}`}>
-                      <Blogcard title={item.name} image="/addpage.jpg" />
-                    </Link>
-                  </div>
-                ))}
-              </div>
-            </div>
+      {/* Main content with checkboxes */}
+      <div className="flex-grow pl-80">
+        <div className="mb-4">
+          {initialCourses.map((course) => (
+            <label key={course.url} className="inline-flex items-center mr-4">
+              <input
+                type="checkbox"
+                checked={isCourseChecked(course.url)}
+                onChange={() => handleCheckboxChange(course.url)}
+                className="mr-2"
+              />
+              {course.name}
+            </label>
           ))}
+        </div>
+
+        {/* Course cards */}
+        <div>
+          {initialCourses.map((course) => 
+            isCourseChecked(course.url) && (
+              <div key={course.url} id={course.url} className="mb-8">
+                <h1 className="text-2xl font-bold mb-4">{course.name}</h1>
+                <div className="flex flex-wrap gap-10">
+                  {course.subCourses.map((subCourse) => (
+                    <div key={subCourse.url} className="w-60">
+                      <Link href={`/Home/Courses/pages/${subCourse.url}`} passHref>
+                        <div>
+                          <Blogcard title={subCourse.name} image="/addpage.jpg" />
+                        </div>
+                      </Link>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )
+          )}
         </div>
       </div>
     </div>
