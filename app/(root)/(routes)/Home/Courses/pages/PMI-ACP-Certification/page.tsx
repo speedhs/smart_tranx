@@ -156,16 +156,14 @@ const Page = () => {
           <div className="flex flex-col">
             <div className="h-auto max-w-[700px]  ">
               <h1 className="text-4xl font-extrabold">
-                PMP certification course
+              PMI-ACP Certification
               </h1>
               <p className="font-medium text-lg opacity-90">
-                Smartranx’s PMP training boot camp covers all the essential
-                topics which are absolutely crucial for a project management
-                professional. Our course curriculum is aligned with the latest
-                PMBOK 7th edition guide book. Additionally, you will gain
-                insight into real-life case studies, the exam pattern, and
-                receive valuable tips and tricks to excel in your project
-                management journey.
+              •	The PMI-ACP® training provides you with a comprehensive understanding of agile methodologies, enabling them to effectively manage projects in dynamic environments.
+•	You will learn various agile frameworks and techniques, including Scrum, Kanban, Lean, and Extreme Programming (XP), gaining the flexibility to adapt their approach to different project requirements.
+•	This training equips you with the skills to foster collaboration among cross-functional teams, enhance communication, and promote continuous improvement throughout the project lifecycle.
+•	By earning the PMI-ACP certification, you can demonstrate your proficiency in agile practices, enhancing your credibility and marketability in the job market.
+
               </p>
             </div>
             <div className="flex flex-row mt-8 gap-x-7 p-2  ">

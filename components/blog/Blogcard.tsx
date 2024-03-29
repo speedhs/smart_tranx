@@ -8,8 +8,7 @@ interface BlogCards{
     image:string
 }
 const Blogcard:React.FC<BlogCards> = ({
-    title,
-    
+    title,    
     image
 }) => {
   return (

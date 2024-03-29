@@ -42,7 +42,6 @@ const Homepage = () => {
             backgroundColor: 'darkgreen',
             color: 'white',
             zIndex:2,
-            height:'40%',
             padding: '2rem', // Add padding to the content area
             border: '8px solid orange', // Optional: if you want rounded corners
             flex: 1, // Take up the full space available
