@@ -59,7 +59,7 @@ const Faq = () => {
   ];
 
   return (
-    <div className="flex flex-col mt-4 p-6 max-w-[1000px] min-w-[1000px]">
+    <div className="flex flex-col mt-4 p-6 max-w-[1000px] min-w-[1000px]" id = "Faq">
       <h1 className="text-2xl font-bold">FAQs</h1>
       <div className="mt-5 p-4">
         <Accordion type="single" collapsible>

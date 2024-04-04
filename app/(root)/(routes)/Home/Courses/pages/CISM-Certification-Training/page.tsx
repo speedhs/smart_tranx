@@ -63,23 +63,21 @@ const Page: React.FC = () => {
           <div className="lg:w-3/4">
             <div className="flex flex-col">
             <h1 className="text-4xl font-extrabold">
-                Certified Scrum Master
+                ITIL-certification course
               </h1>
               <p className="font-medium text-lg opacity-90">
-                If you are seeking to enhance your proficiency in Agile Project
-                Management, the Certified Scrum Master (CSM) Certification
-                offered by Smartranx is an excellent choice. This CSM
-                certification program offers a well-rounded combination of
-                theoretical and practical knowledge, accompanied by
-                industry-specific assignments. It equips you with a
-                comprehensive grasp of the Scrum framework, enabling your
-                success in the field of Agile Project Management. Additionally,
-                this certification is instructed by Certified Scrum Trainers,
-                ensuring a high-quality learning experience. With a deep
-                understanding of the subject matter, participants can unlock
-                numerous professional opportunities and chart a rewarding career
-                path.
+                ITIL 4 Foundation 
+                • Receive training on fundamental ITIL® 4
+                lifecycle concepts and industry best practices. 
+                • Develop
+                expertise in ITIL 4 service management and improve workflow
+                processes. 
+                • Study from an accredited curriculum that includes
+                practice assessments and real-world case studies. 
+                • Prepare for
+                a highly rewarding IT career with improved job security.
               </p>
+
             </div>
             <div className="flex flex-row mt-8 gap-x-7 p-2">
               <div className="flex gap-2 items-center">
@@ -124,10 +122,7 @@ const Page: React.FC = () => {
     </div>
   </div>
   <div className="lg:w-1/4 sticky top-0" style={{  fontSize: "1.2rem",paddingLeft: "20vh",paddingTop:"25vh"}}>
-  <SheduleForm
-              title="Certified Scrum Master"
-              duration="4 days"
-            />
+  <SheduleForm title="ITIL-certification course" duration="4 days" />
   </div>
 </div>
 

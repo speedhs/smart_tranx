@@ -2,7 +2,7 @@ import React from "react";
 
 const Overview = () => {
   return (
-    <div className="p-6 max-w-[1000px]">
+    <div className="p-6 max-w-[1000px]" key = "Overview">
       <h1 className="font-bold text-2xl my-3">
         Overview
       </h1>

@@ -45,7 +45,7 @@ const Keyfeatures = () => {
   ];
 
   return (
-    <div className="flex flex-col mt-4 p-6 max-w-[1000px]">
+    <div className="flex flex-col mt-4 p-6 max-w-[1000px]" id = "Keyfeatures">
       <h1 className="text-2xl font-bold">Key Features</h1>
       <div className="grid grid-cols-2 mt-6 gap-5 p-5">
         {trainingOptions.map((item) => (

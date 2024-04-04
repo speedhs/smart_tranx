@@ -32,15 +32,15 @@ const Page: React.FC = () => {
       subCourses: [
         {
           name: "CISA Certification Training",
-          url: "cisa-certification-training",
+          url: "CISA-Certification-Training",
         },
         {
           name: "CISM Certification Training",
-          url: "cism-certification-training",
+          url: "CISM-Certification-Training",
         },
         {
           name: "CISSP Certification Training",
-          url: "cissp-certification-training",
+          url: "CISSP-Certification-Training",
         },
       ],
     },
@@ -88,7 +88,7 @@ const Page: React.FC = () => {
       subCourses: [
         {
           name: "Conflict Management Training",
-          url: "conflict-management-training",
+          url: "Conflict-Management-Training",
         },
         {
           name: "Management Skills",

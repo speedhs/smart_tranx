@@ -8,7 +8,7 @@ import {
 
 const Courseagenda = () => {
   return (
-    <div className="flex flex-col mt-4 p-6 max-w-[1000px] min-w-[1000px]">
+    <div className="flex flex-col mt-4 p-6 max-w-[1000px] min-w-[1000px]" key = "Courseagenda">
       <h1 className="text-2xl font-bold">Course Agenda</h1>
       <h2 className="opacity-75 mt-4">
         Certified Scrum Master Course Agenda

@@ -3,7 +3,7 @@ import { FaCheck } from "react-icons/fa";
 
 const Overview = () => {
   return (
-    <div className="p-6 max-w-[1000px]">
+    <div className="p-6 max-w-[1000px]" id = "Overview">
       <h1 className="font-bold text-2xl my-3">
         Certified Scrum Master Overview
       </h1>
