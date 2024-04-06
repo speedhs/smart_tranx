@@ -1,5 +1,4 @@
 "use client";
-
 import React, { useState, useEffect, useRef } from "react";
 import { usePathname } from "next/navigation";
 import { FaCalendarAlt, FaRegIdBadge } from "react-icons/fa";
@@ -12,8 +11,109 @@ import Benifits_cards from "@/components/Benifits_cards";
 import SheduleForm from "@/components/SheduleForm";
 import { cn } from "@/lib/utils";
 import Contactus_card from "@/components/Contactus_card";
+import main from "../../api/RazorPay";
+import axios from 'axios';
+import Razorpay from "razorpay";
 
 const Page = () => {
+  const [order, setOrder] = useState<any>(null);
+  const [order_id, setOrderId] = useState<any>("");
+  const [amount, setAmount] = useState<any>(0);
+  const [coursename, setCourseName] = useState<any>("");
+  const [email, setEmail] = useState<any>("");
+  const [prefillValues, setPrefillValues] = useState<any>({
+    name: "",
+    email: "",
+    contact: ""
+  });
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+
+
+  const sendEmail = async() => {
+    try {
+      setCourseName("PMP-ACP-Certification")
+      const email = "cocattackbased@gmail.com"
+      const response = await axios.post('http://localhost:8000/api/send-email', {
+        coursename,
+        email
+      })
+      console.log(response)
+
+    } catch (error) {
+      console.log("client mai error:", error)
+    }
+  }
+
+  const createOrder = async () => {
+      try {
+          var amount = 1000
+          var currency = "INR"
+          var receipt = "receipt#1"
+          const response = await axios.post('http://localhost:8000/api/create-order', {
+              amount,
+              currency,
+              receipt
+          });
+          setAmount(response.data.amount)
+          setOrderId(response.data.id)
+          setOrder(response.data);
+      } catch (error) {
+          console.error('Error creating order:', error);
+      }
+  };
+
+  const payment = async () => {
+    try {
+      var script = document.createElement('script');
+    script.src = 'https://checkout.razorpay.com/v1/checkout.js';
+    document.head.appendChild(script);  
+    console.log("script")
+      var options = {
+        "key": "rzp_live_TRaKMRdCPf9r3P", // Enter the Key ID generated from the Dashboard
+        "amount": amount, // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
+        "currency": "INR",
+        "name": "Smartranx", // Your business name
+        "description": "Test Transaction",
+        "image": "https://logos.flamingtext.com/Word-Logos/any-design-sketch-name.png",
+        "order_id": order_id, // This is a sample Order ID. Pass the `id` obtained in the response of Step 1
+        "callback_url": `http://localhost:8000/api/handle-payment?${email}&${coursename}`,
+        "prefill": { // We recommend using the prefill parameter to auto-fill customer's contact information especially their phone number
+            "name": prefillValues.name, // Your customer's name
+            "email": prefillValues.email,
+            "contact": prefillValues.contact // Provide the customer's phone number for better conversion rates 
+        },
+        "notes": {
+            "address": "Razorpay Corporate Office"
+        },
+        "theme": {
+            "color": "#3399cc"
+        }
+      };
+      
+      const rzp1 = new (window as any).Razorpay(options);
+      rzp1.open();
+    } catch (error) {
+      console.error('Error during payment:', error);
+    }
+  };
+
+  const openDialog = () => {
+    setIsDialogOpen(true);
+    createOrder()
+  };
+
+  const closeDialog = () => {
+    setIsDialogOpen(false);
+  };
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setPrefillValues(prevState => ({
+      ...prevState,
+      [name]: value
+    }));
+  };
+
   const path = usePathname();
   const pathSegments = path.split("/").filter((segment) => segment);
 
@@ -55,7 +155,7 @@ const Page = () => {
         <div className="flex flex-row items-center justify-between mt-5 p-8">
           <div className="flex flex-col">
             <div className="h-auto max-w-[700px]  ">
-              <h1 className="text-4xl font-extrabold">
+            <h1 className="text-4xl font-extrabold">
                 Project Management Techniques certification training
               </h1>
               <p className="font-medium text-lg opacity-90">
@@ -84,10 +184,13 @@ const Page = () => {
                   <h1 className="font-bold ">Speciality</h1>
                   <h2>One to One training</h2>
                 </div>
-              </div>
+              </div>  
             </div>
-            <button className="w-auto max-w-44 h-auto bg-sky-400 mt-10 min-h-14 rounded-lg p-1">
+            <button className="w-auto max-w-44 h-auto bg-sky-400 mt-10 min-h-14 rounded-lg p-1" onClick={sendEmail}>
               <h1 className="text-xl font-normal">Schedule</h1>
+            </button>
+            <button className="w-auto max-w-44 h-auto bg-sky-400 mt-10 min-h-14 rounded-lg p-1" onClick={payment}>
+              <h1 className="text-xl font-normal">Pay</h1>
             </button>
           </div>
         </div>
@@ -106,27 +209,42 @@ const Page = () => {
         </div>
         <div ref={sectionRef} className="flex ">
           <Section selectedSection={selectedSection} />
-          {/* <div className="sticky top-0 right-0 mt-14">
-            <SheduleForm
-              title="Project Management Techniques certification training"
-              duration="4 days"
-            />
-          </div> */}
           <div
             ref={formRef}
             className={`fixed top-0 right-0 mt-14 ml-14 ${
               isSticky ? "relative" : "relative"
             }`}
           >
-            <SheduleForm
-              title="Project Management Techniques certification training"
-              duration="4 days"
-            />
+            <SheduleForm title="Project Management Techniques certification training" duration="4 days" />
           </div>
         </div>
         <Contactus_card />
       </div>
-      
+      {/* Dialog */}
+      {isDialogOpen && (
+        <div className="fixed top-0 left-0 w-full h-full bg-gray-800 bg-opacity-50 flex justify-center items-center z-50">
+          <div className="bg-white p-8 rounded-lg">
+            <h2 className="text-2xl font-bold mb-4">Enter Details</h2>
+            <form>
+              <div className="mb-4">
+                <label htmlFor="name" className="block mb-2">Name</label>
+                <input type="text" id="name" name="name" value={prefillValues.name} onChange={handleInputChange} className="w-full border border-gray-300 rounded-md px-3 py-2" />
+              </div>
+              <div className="mb-4">
+                <label htmlFor="email" className="block mb-2">Email</label>
+                <input type="email" id="email" name="email" value={prefillValues.email} onChange={handleInputChange} className="w-full border border-gray-300 rounded-md px-3 py-2" />
+              </div>
+              <div className="mb-4">
+                <label htmlFor="contact" className="block mb-2">Contact</label>
+                <input type="text" id="contact" name="contact" value={prefillValues.contact} onChange={handleInputChange} className="w-full border border-gray-300 rounded-md px-3 py-2" />
+              </div>
+              <div className="text-right">
+                <button type="button" onClick={closeDialog} className="px-4 py-2 bg-sky-400 text-white rounded-md">Done</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
@@ -162,10 +280,6 @@ const Section = ({ selectedSection }: any) => {
   return (
     <div>
       {contentMap[selectedSection]}
-      {/* <Overview />
-    <Keyfeatures />
-    <Courseagenda />
-    <Faq /> */}
     </div>
   );
 };
